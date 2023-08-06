@@ -1,18 +1,39 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif; */
+    /* font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace; */
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+header li a {
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
+
 
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base{
+  button {
+    @apply  rounded duration-300 bg-[#ffbe33] hover:bg-[#ffbe33d2] text-white h-[42px] w-[180px] px-6 py-1
+  }
+  .btn_disable {
+    @apply bg-[#5742e383] hover:bg-[#5742e383]
+  }
+  .title {
+    @apply font-medium text-[26px]
+  }
+}
+
+@layer components {
+  .container {
+    @apply px-4 md:px-8 mx-auto
+  }
+}
