@@ -5,6 +5,8 @@ import {FaUser} from 'react-icons/fa'
 import {FaShoppingCart} from 'react-icons/fa'
 import {IoMdClose} from 'react-icons/io'
 import {CSSTransition} from 'react-transition-group'
+import { useDispatch, useSelector } from "react-redux";
+import {uiActions} from '../store/ui-slice'
 
 const timingDuration = {
     enter: 300,
@@ -54,10 +56,17 @@ const MobileNav = (props) => {
 }
 
 const Header = () => {
+    const totalQuantity = useSelector(state => state.cart.totalQuantity)
     const [isOver, setIsOver] = useState(false);
     const [isShowMobileNav, setIsShowMobileNav] = useState(false)
     const location = useLocation()
     const isHome = location.pathname === '/'
+
+    const dispatch = useDispatch()
+
+    const cartIsShowChangeHandler = () => {
+        dispatch(uiActions.cartShowChangeHandler())
+    }
 
     useEffect(() => {
         const handleScroll = () => {
@@ -87,7 +96,7 @@ const Header = () => {
                 isShowMobileNav && <Backdrop onShowChange={showMobileNavChangeHandler} />
             }
 
-            <header className={`${isHome ? 'text-white' : 'bg-white text-[#333]'} drop-shadow-lg py-2 absolute top-0 right-0 left-0 bg-transparent z-0`}>
+            <header className={`${isHome ? 'text-white' : 'bg-[#fffffff0] text-[#333]'} drop-shadow-lg py-2 absolute top-0 right-0 left-0 bg-transparent z-10`}>
                 <div className="container flex justify-between items-center ">
                     <h1 className="text-[24px] font-sans"><Link to='/'>CORONA</Link></h1>
                     <div className="p-1 cursor-pointer md:hidden">
@@ -109,11 +118,14 @@ const Header = () => {
                     </ul>
                     <div className="hidden md:flex">
                         <NavLink to='/profile' className='block ml-5'><FaUser size={23}/></NavLink>
-                        <NavLink className='block ml-5'><FaShoppingCart size={23}/></NavLink>
+                        <span onClick={cartIsShowChangeHandler} className='block ml-5 relative cursor-pointer'>
+                            <FaShoppingCart size={23}/> 
+                            <span className=" absolute top-[-10px] right-[-20px] p-1 flex justify-center items-center w-[24px] h-[24px] bg-[#ffbe33] text-white font-bold rounded-full text-centerm ">{totalQuantity}</span>
+                        </span>
                     </div>
                 </div>
             </header>
-            <header className={`${isOver ? 'translate-y-0' : ' translate-y-[-120%]'} drop-shadow py-3 fixed top-0 right-0 left-0 bg-white text-[#333] duration-300 z-0`}>
+            <header className={`${isOver ? 'translate-y-0' : ' translate-y-[-120%]'} drop-shadow-lg py-3 fixed top-0 right-0 left-0 bg-[#fffffff0] text-[#333] duration-300 z-10`}>
                 <div className="container flex justify-between items-center ">
                     <h1 className="text-[24px] font-sans"><Link to='/'>CORONA</Link></h1>
                     <div className="p-1 cursor-pointer md:hidden">
@@ -135,7 +147,10 @@ const Header = () => {
                     </ul>
                     <div className="hidden md:flex">
                         <NavLink to='/profile' className='block ml-5'><FaUser size={23}/></NavLink>
-                        <NavLink className='block ml-5'><FaShoppingCart size={23}/></NavLink>
+                        <span onClick={cartIsShowChangeHandler} className='block ml-5 relative cursor-pointer'>
+                            <FaShoppingCart size={23}/> 
+                            <span className=" absolute top-[-10px] right-[-20px] p-1 flex justify-center items-center w-[24px] h-[24px] bg-[#ffbe33] text-white font-bold rounded-full text-centerm ">{totalQuantity}</span>
+                        </span>
                     </div>
                 </div>
             </header>

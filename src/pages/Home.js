@@ -24,9 +24,11 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <div className="bg-[#eeeeee36]">
+            <div className="bg-[#eeeeee3f]">
                 <div className="container py-16 ">
-                    <img className="w-full md:w-[80%] mx-auto" src={pizza_img} alt="" />
+                    <h1 className="text-[22px] mb-2 text-center">Best Delicious Pizza</h1>
+                    <div className="h-[2px] w-[100px] bg-[#ffbe33] mx-auto" />
+                    <img className="w-full md:w-[75%] mx-auto" src={pizza_img} alt="" />
                 </div>
             </div>
             <div className="container py-16">

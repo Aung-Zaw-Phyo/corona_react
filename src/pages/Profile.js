@@ -1,19 +1,14 @@
 import React, { Suspense } from "react";
-import { Await, defer, json, useAsyncError, useLoaderData } from "react-router-dom";
+import { Await, defer, json, useLoaderData } from "react-router-dom";
 import Info from "../components/profile/Info";
 import { getToken } from "../utils/auth";
-
-const ComponentError = () => {
-    const error = useAsyncError()
-    console.log(error)
-    const message = error.message || 'Something wrong!' 
-    return <p className="text-center py-6 text-[red]">{message}</p>
-}
+import ComponentError from "../components/UI/ComponentError";
+import ComponentLoading from "../components/UI/ComponentLoading";
 
 const Profile = () => {
     const loadedData = useLoaderData()
     return (
-        <Suspense fallback={<p className="py-6 text-center">Loading ... </p>}>
+        <Suspense fallback={<ComponentLoading/>}>
             <Await resolve={loadedData.profile} errorElement={<ComponentError/>}>
                 {(data) => <Info data={data.data} />}
             </Await>
@@ -22,6 +17,32 @@ const Profile = () => {
 };
 
 export default Profile;
+
+export const action = async ({request, params}) => {
+    const formData = await request.formData()
+
+    const response = await fetch('http://localhost:8000/api/profile/update', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + getToken()
+        },
+        body: formData
+    })
+
+    if(response.status === 422) {
+        const resData = await response.json()
+        return resData
+    }
+
+    if(!response.ok) {
+        throw json({message: 'Something wrong.'}, {status: 500})
+    }
+
+    const resData = await response.json()
+
+    return resData;
+}
 
 const profileLoader = async () => {
     const response = await fetch('http://localhost:8000/api/profile', {

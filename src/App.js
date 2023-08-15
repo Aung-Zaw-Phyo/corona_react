@@ -1,21 +1,21 @@
 import React from "react";
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Home from "./pages/Home";
-import Menu from "./pages/Menu";
+import Menu, {loader as menuLoader} from "./pages/Menu";
 import About from "./pages/About";
 import Root from "./pages/Root";
-import BookTable from "./pages/BookTable";
+import BookTable, {action as bookingAction} from "./pages/BookTable";
 import Login, {action as loginAction} from "./pages/Login";
 import Register, {action as registerAction} from "./pages/Register";
 import ErrorPage from "./pages/ErrorPage";
 import { authFormMiddleware, checkToken } from "./utils/auth";
-import Profile, {loader as profileLoader} from "./pages/Profile";
+import Profile, {loader as profileLoader, action as updateProfileAction} from "./pages/Profile";
 import {loader as logoutLoader} from './pages/Logout'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    errorElement: ErrorPage,
+    errorElement: <ErrorPage/>,
     children: [
       {
         path: '',
@@ -27,7 +27,8 @@ const router = createBrowserRouter([
           },
           {
             path: 'menu',
-            element: <Menu/>
+            element: <Menu/>,
+            loader: menuLoader
           },
           {
             path: 'about',
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
           },
           {
             path: 'book-table',
-            element: <BookTable/>
+            element: <BookTable/>,
+            action: bookingAction
           },
           {
             path: '',
@@ -44,7 +46,8 @@ const router = createBrowserRouter([
               {
                 path: 'profile',
                 element: <Profile/>,
-                loader: profileLoader
+                loader: profileLoader,
+                action: updateProfileAction
               }
             ]
           },

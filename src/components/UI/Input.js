@@ -9,6 +9,7 @@ const Input = (props) => {
     const changeHandler = props.onChange;
     const blurHandler = props.onBlur;
     const value = props.value
+    const defaultValue = props.defaultValue
     const error = props.error
     const inputClasses = `${props.className} block rounded w-full outline-none border-[1.5px] border-gray-400 h-[40px] p-2 focus:border-[#222811b1] duration-300`
     return (
@@ -18,7 +19,8 @@ const Input = (props) => {
                 <span className="text-[red]">{conditionalLabel && '( ' + conditionalLabel + ' )'}</span>
             </div>
             <input type={type} id={name} name={name} autoFocus={focus}
-                onChange={changeHandler} onBlur={blurHandler} value={value} 
+                onChange={changeHandler} onBlur={blurHandler} 
+                value={value} defaultValue={defaultValue}
                 className={inputClasses}
             />
             {
