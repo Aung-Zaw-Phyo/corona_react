@@ -10,7 +10,7 @@ import { cartActions } from "../../store/cart-slice";
 // import {loadStripe} from '@stripe/stripe-js';
 
 
-const PaymentForm = () => {
+const PaymentForm = (props) => {
     const stripe = useStripe();
     const elements = useElements();
     const [loading, setLoading] = useState(false);
@@ -112,6 +112,7 @@ const PaymentForm = () => {
         })
         dispatch(cartActions.replaceCart(items))
         setLoading(false);
+        props.onChangeHandler()
     };
 
     const cardElementOptions = {

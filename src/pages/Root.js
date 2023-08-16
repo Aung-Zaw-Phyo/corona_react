@@ -6,6 +6,7 @@ import Cart from "./Cart";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../store/ui-slice";
 import { addToCartRequest, fetchCartData } from "../store/cart-actions";
+import { getToken } from "../utils/auth";
 
 let isInitial = true;
 
@@ -26,6 +27,9 @@ const Root = () => {
     }, [dispatch])
 
     useEffect(() => {
+        if(!getToken()) {
+            return
+        }
         if(isInitial) {
             isInitial = false
             return

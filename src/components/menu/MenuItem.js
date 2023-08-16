@@ -1,18 +1,22 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import {cartActions} from '../../store/cart-slice'
-import { success } from "../../utils/sweet";
+import { fail } from "../../utils/sweet";
+import { getToken } from "../../utils/auth";
 
 const MenuItem = ({product}) => {
     const dispatch = useDispatch()
     const addItemToCart = () => {
+        if(!getToken()) {
+            fail('Please login')
+            return
+        }
         dispatch(cartActions.addItem({
             id: product.id,
             name: product.name,
             price: Number(product.price),
             image: product.image
         }))
-        // success(product.name + ' is added to cart successfully.')
     }
     return (
         <div className="group">

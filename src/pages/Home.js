@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import hero_img from "../images/hero-bg.jpg";
 import burger_img from '../images/burger.png'
 import pizza_img from '../images/pizza.png'
 import pasta_video from '../images/pasta.mp4'
+import { getToken } from "../utils/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartData } from "../store/cart-actions";
+import { cartActions } from "../store/cart-slice";
 
+let isInitial = true
 const Home = () => {
+    const dispatch = useDispatch()
+    const isAuth = useSelector(state => state.cart.isAuth)
+
+    useEffect(() => {
+        if(getToken() && !isInitial && !isAuth) {
+            console.log('hit')
+            dispatch(fetchCartData())
+            dispatch(cartActions.isAuthChangeHandler())
+        }
+        if(isInitial) {
+            isInitial = false
+        }
+        
+    }, [dispatch, isAuth])
+
     return (
         <>
             <div className="w-full h-screen flex items-center bg-[#EDF2F6]">

@@ -7,6 +7,7 @@ import {IoMdClose} from 'react-icons/io'
 import {CSSTransition} from 'react-transition-group'
 import { useDispatch, useSelector } from "react-redux";
 import {uiActions} from '../store/ui-slice'
+import { getToken } from "../utils/auth";
 
 const timingDuration = {
     enter: 300,
@@ -117,7 +118,17 @@ const Header = () => {
                         </li>
                     </ul>
                     <div className="hidden md:flex">
-                        <NavLink to='/profile' className='block ml-5'><FaUser size={23}/></NavLink>
+                        {
+                            getToken() &&
+                            <NavLink to='/profile' className='block ml-5'><FaUser size={23}/></NavLink>
+                        }
+                        {
+                            !getToken() && 
+                            <span className=" group">
+                                <NavLink to='login' >Login</NavLink>
+                                <div className="h-[2px] w-[100%] bg-[#ffbe33] scale-0 mx-auto group-hover:scale-110 duration-300" />
+                            </span>
+                        }
                         <span onClick={cartIsShowChangeHandler} className='block ml-5 relative cursor-pointer'>
                             <FaShoppingCart size={23}/> 
                             <span className=" absolute top-[-10px] right-[-20px] p-1 flex justify-center items-center w-[24px] h-[24px] bg-[#ffbe33] text-white font-bold rounded-full text-centerm ">{totalQuantity}</span>
@@ -146,7 +157,17 @@ const Header = () => {
                         </li>
                     </ul>
                     <div className="hidden md:flex">
-                        <NavLink to='/profile' className='block ml-5'><FaUser size={23}/></NavLink>
+                        {
+                            getToken() &&
+                            <NavLink to='/profile' className='block ml-5'><FaUser size={23}/></NavLink>
+                        }
+                        {
+                            !getToken() && 
+                            <span className=" group">
+                                <NavLink to='login' >Login</NavLink>
+                                <div className="h-[2px] w-[100%] bg-[#ffbe33] scale-0 mx-auto group-hover:scale-110 duration-300" />
+                            </span>
+                        }
                         <span onClick={cartIsShowChangeHandler} className='block ml-5 relative cursor-pointer'>
                             <FaShoppingCart size={23}/> 
                             <span className=" absolute top-[-10px] right-[-20px] p-1 flex justify-center items-center w-[24px] h-[24px] bg-[#ffbe33] text-white font-bold rounded-full text-centerm ">{totalQuantity}</span>

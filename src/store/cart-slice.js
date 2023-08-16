@@ -6,7 +6,8 @@ const initialState = {
     items: [],
     totalQuantity: 0,
     totalAmount: 0,
-    changed: false
+    changed: false,
+    isAuth: false,
 }
 
 const cartSlice = createSlice({
@@ -21,6 +22,18 @@ const cartSlice = createSlice({
                 return previousValue + currentValue.amount
             }, 0) : 0
             state.totalAmount = totalAmount
+        },
+
+        emptyCart(state, action) {
+            state.items = []
+            state.totalAmount = 0
+            state.totalQuantity = 0
+            state.changed = false
+            state.isAuth = false
+        },
+
+        isAuthChangeHandler(state, action) {
+            state.isAuth = !state.isAuth
         },
 
         addItem(state, action) {

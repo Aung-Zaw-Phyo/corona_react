@@ -4,6 +4,10 @@ import {cartActions}  from './cart-slice'
 
 export const fetchCartData = () => {
     return async (dispatch) => {
+        if(!getToken()) {
+            return
+        }
+
         const sendRequest = async () => {
             const response = await fetch('http://localhost:8000/api/get-cart-data', {
                 method: 'GET',
@@ -13,6 +17,11 @@ export const fetchCartData = () => {
                     'Authorization': 'Bearer ' + getToken()
                 }
             })
+
+            if(response.status === 401) {
+                const resData = await response.json()
+                return resData
+            }
 
             if(!response.ok) {
                 throw new Error('Fetching Fial!')
@@ -24,6 +33,9 @@ export const fetchCartData = () => {
         // id, name, price, image, amount, quantity
         try {
             const resData = await sendRequest()
+            if(resData.status === false) {
+                return
+            }
             const itemsFromDB = resData.data.items
             const items = itemsFromDB.map(itm => {
                 return {
@@ -37,7 +49,8 @@ export const fetchCartData = () => {
             })
             dispatch(cartActions.replaceCart(items))
         } catch (error) {
-            console.log(error)
+            fail('Something wrong, please reload the page.')
+            // console.log(error.message)
         }
     }
 }

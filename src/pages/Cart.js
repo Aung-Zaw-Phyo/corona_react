@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {IoMdRemove, IoMdAdd} from 'react-icons/io'
 import { cartActions } from "../store/cart-slice";
 import PaymentForm from "../components/Cart/PaymentForm";
+import { getToken } from "../utils/auth";
+import { fail } from "../utils/sweet";
 
 // const stripePromise = loadStripe('pk_test_51NNY6yLUTxip4b30lKF0gPFZP06dlh858wLWsGFheOHLRS7V0Gh23ohLuZrXusfwm3q81sSctzw5dtwE4gJeqxSc005WrKrVUl');
 
 const Backdrop = ({onChange}) => {
     return (
-      <div onClick={onChange} className="fixed top-0 bottom-0 left-0 right-0 w-full h-screen bg-gray-600/60 z-10"/>
+      <div className="fixed top-0 bottom-0 left-0 right-0 w-full h-screen bg-gray-600/60 z-10"/>
     )
 }
 
@@ -24,6 +26,10 @@ const Modal = (props) => {
     }
     
     const addItemToCart = (item) => {
+        if(!getToken()) {
+            fail('Please login')
+            return
+        }
         dispatch(cartActions.addItem({
             id: item.id,
             name: item.name,
@@ -33,6 +39,10 @@ const Modal = (props) => {
     }
 
     const removeItemToCart = (item) => {
+        if(!getToken()) {
+            fail('Please login')
+            return
+        }
         dispatch(cartActions.removeItem(item.id))
     }
 
@@ -76,27 +86,32 @@ const Modal = (props) => {
 
                             {
                                 items.length === 0 && (
-                                    <div className="text-center">
+                                    <div className="text-center py-3">
                                         There is no item.
                                     </div>
                                 )
                             }
-                            <div className="flex justify-between mb-3 font-bold">
-                                <span>Total Amount</span>
-                                <span className="m-1">$ <span className="text-[20px]">{totalAmount}</span></span>
-                            </div>
+                                                        {
+                                items.length > 0 && (
+                                <div className="flex justify-between mb-3 font-bold">
+                                    <span>Total Amount</span>
+                                    <span className="m-1">$ <span className="text-[20px]">{totalAmount}</span></span>
+                                </div>
+                                )
+                            }
+                            
                         </div>
                     )
                 }
 
                 {
-                    isCheckout && <PaymentForm/>
+                    isCheckout && getToken() && <PaymentForm  onChangeHandler={props.onChange}/>
                 }
                 <div className="w-full h-[.5px] bg-[#33333342] mb-3" />
                 <div className="text-end">
                     <button onClick={props.onChange} className="w-auto h-auto p-[8px] outline_btn">CLOSE</button>
                     {
-                        !isCheckout && <button onClick={checkoutHandler} className="w-auto h-auto p-[8px] outline_btn">CHECKOUT</button>
+                        !isCheckout && getToken() && items.length > 0 && <button onClick={checkoutHandler} className="w-auto h-auto p-[8px] outline_btn">CHECKOUT</button>
                     }
                     {
                         isCheckout && <button onClick={checkoutHandler} className="w-auto h-auto p-[8px] outline_btn">CANCEL</button>

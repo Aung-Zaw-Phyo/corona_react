@@ -2,6 +2,9 @@ import { redirect } from "react-router-dom"
 import { getToken } from "../utils/auth"
 
 export const loader = async () => {
+    if(!getToken()) {
+        return redirect('/')
+    }
     await fetch('http://localhost:8000/api/logout', {
         method: 'POST',
         headers: {

@@ -1,7 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { cartActions } from "../../store/cart-slice";
 
 const ProfileCard = ({user}) => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const logoutHandler = () => {
+        dispatch(cartActions.emptyCart())
+        navigate('/logout')
+    }
     return (
         <div className="w-full md:w-5/12 lg:w-4/12 p-2">
             <div className="p-3 bg-[#F5F5F5] rounded-lg drop-shadow text-center">
@@ -12,9 +20,7 @@ const ProfileCard = ({user}) => {
                 </div>
                 <p className="mb-2">{user.email}</p>
                 <p className="mb-2">{user.address}</p>
-                <Link to='/logout'>
-                    <button className="mt-6 block w-full">Logout</button>
-                </Link>
+                <button onClick={logoutHandler} className="mt-6 block w-full">Logout</button>
             </div>
         </div>
     );

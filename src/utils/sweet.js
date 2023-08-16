@@ -1,7 +1,6 @@
 import Swal from "sweetalert2";
 
 
-
 export const success = (message) => {
     Swal.fire({
         title: 'Success',

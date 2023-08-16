@@ -57,11 +57,12 @@ const BookTable = () => {
     }, [])
 
     useEffect(() => {
-        setError(null)
         if(data && data.status === false) {
             setError(data.message)
         }
-        if(data && data.status === true && error) {
+        if(data && data.status === true) {
+            console.log('hihi')
+            setError(null)
             formResetHandler()
             success(data.message)
         }
