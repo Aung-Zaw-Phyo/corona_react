@@ -1,6 +1,6 @@
 import React from "react";
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import Home from "./pages/Home";
+import Home, {loader as discountLoader} from "./pages/Home";
 import Menu, {loader as menuLoader} from "./pages/Menu";
 import About from "./pages/About";
 import Root from "./pages/Root";
@@ -11,6 +11,7 @@ import ErrorPage from "./pages/ErrorPage";
 import { authFormMiddleware, checkToken } from "./utils/auth";
 import Profile, {loader as profileLoader, action as updateProfileAction} from "./pages/Profile";
 import {loader as logoutLoader} from './pages/Logout'
+import Order, {loader as orderLoader} from "./pages/Order";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,8 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Home/>
+            element: <Home/>,
+            loader: discountLoader
           },
           {
             path: 'menu',
@@ -48,6 +50,11 @@ const router = createBrowserRouter([
                 element: <Profile/>,
                 loader: profileLoader,
                 action: updateProfileAction
+              },
+              {
+                path: 'order',
+                element: <Order/>,
+                loader: orderLoader
               }
             ]
           },

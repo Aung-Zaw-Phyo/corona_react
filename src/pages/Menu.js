@@ -32,14 +32,8 @@ const menuLoader = async (request) => {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + getToken()
     }
   })
-
-  if(response.status === 401) {
-    const resData = await response.json()
-    throw resData
-  }
 
   if(!response.ok) {
       throw json({message: 'Something wrong.'}, {status: 500})

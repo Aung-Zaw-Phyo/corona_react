@@ -44,13 +44,14 @@ export const fetchCartData = () => {
                     price: itm.product.price,
                     image: itm.product.image,
                     quantity: itm.quantity,
-                    amount: Number(itm.quantity) * Number(itm.product.price)
+                    amount: itm.total_price,
+                    discount: itm.discount_percent
                 }
             })
             dispatch(cartActions.replaceCart(items))
         } catch (error) {
-            fail('Something wrong, please reload the page.')
-            // console.log(error.message)
+            // fail('Something wrong, please reload the page.')
+            console.log(error.message)
         }
     }
 }
@@ -98,12 +99,13 @@ export const addToCartRequest = (items) => {
                     price: itm.product.price,
                     image: itm.product.image,
                     quantity: itm.quantity,
-                    amount: Number(itm.quantity) * Number(itm.product.price)
+                    amount: itm.total_price,
+                    discount: itm.discount_percent
                 }
             })
             dispatch(cartActions.replaceCart(items))
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
         }
     }
 }

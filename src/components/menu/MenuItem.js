@@ -14,13 +14,20 @@ const MenuItem = ({product}) => {
         dispatch(cartActions.addItem({
             id: product.id,
             name: product.name,
-            price: Number(product.price),
-            image: product.image
+            price: product.price,
+            image: product.image,
+            discount: product.discount
         }))
     }
     return (
         <div className="group">
-            <div className="p-3 py-4 text-center overflow-hidden bg-[#fff] rounded-lg border-none group-hover:drop-shadow duration-500">
+            <div className="relative p-3 py-4 text-center overflow-hidden bg-[#fff] rounded-lg border-none group-hover:drop-shadow-lg duration-500">
+                {
+                    product.discount && product.discount > 0 ?
+                    <div className="absolute right-0 top-0 bg-[#ffbe33] rounded-bl-lg rounded-tr-lg p-[4px] text-white text-[18px] -translate-y-20 group-hover:translate-y-0 duration-300">
+                        {product.discount + '%'}
+                    </div> : null
+                }
                 <div className="w-full flex justify-center mb-4">
                     <img className="w-[160px] h-[160px] group-hover:scale-110 duration-500" src={product.image} alt="" />
                 </div>

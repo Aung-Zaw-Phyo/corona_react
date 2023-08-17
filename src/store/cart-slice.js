@@ -1,6 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 
-// id, name, price, image, amount, quantity
+// id, name, price, image, amount, quantity, discount
 
 const initialState = {
     items: [],
@@ -19,9 +19,9 @@ const cartSlice = createSlice({
             state.items = action.payload
             state.totalQuantity = action.payload.length
             const totalAmount = action.payload.length > 0 ? action.payload.reduce((previousValue = 0, currentValue) => {
-                return previousValue + currentValue.amount
+                return previousValue + Number(currentValue.amount)
             }, 0) : 0
-            state.totalAmount = totalAmount
+            state.totalAmount = Number(totalAmount).toFixed(2)
         },
 
         emptyCart(state, action) {
@@ -43,19 +43,32 @@ const cartSlice = createSlice({
                 name: action.payload.name,
                 price: action.payload.price,
                 image: action.payload.image,
+                discount: action.payload.discount
             };
 
             const existingItem = state.items.find((item) => item.id === newItem.id )
 
-            state.totalAmount = Number(state.totalAmount) + Number(newItem.price)
+            const discount = newItem.discount ? newItem.discount : 0
+            const newItemAmount = ((100 - discount) / 100) * newItem.price
+            
+            const totalAmount = Number(state.totalAmount) + newItemAmount
+            state.totalAmount = totalAmount.toFixed(2)
+
             if(!existingItem) {
                 state.totalQuantity ++
                 state.items.push({
-                    ...newItem, quantity: 1, amount: newItem.price
+                    ...newItem, quantity: 1, amount: newItemAmount.toFixed(2)
                 })
             }else {
                 existingItem.quantity ++
-                existingItem.amount = Number(existingItem.amount) + Number(existingItem.price)
+                let discount = existingItem.discount
+                if(newItem.discount && (Number(newItem.discount) !== Number(discount))) {
+                    discount = newItem.discount > existingItem.discount ? newItem.discount : existingItem.discount
+                }
+                existingItem.discount = discount
+                const updatedAmount = (((100 - discount) / 100) * newItem.price) * existingItem.quantity
+                existingItem.amount = updatedAmount.toFixed(2)
+                console.log(discount)
             }
         },
 
@@ -63,14 +76,17 @@ const cartSlice = createSlice({
             state.changed = true
             const id = action.payload;
             const item = state.items.find(item => item.id === id)
-            state.totalAmount = Number(state.totalAmount) - Number(item.price)
+            const totalAmount = state.totalAmount - (((100 - item.discount) / 100) * item.price)
+            state.totalAmount = totalAmount.toFixed(2)
+
             if(Number(item.quantity) === 1) {
                 state.totalQuantity --
                 const updatedItems = state.items.filter(item => item.id !== id)
                 state.items = updatedItems
             }else {
-                item.amount = item.amount - item.price
                 item.quantity --
+                const amount = (((100 - item.discount) / 100) * item.price) * item.quantity
+                item.amount = amount.toFixed(2)
             }
 
         }

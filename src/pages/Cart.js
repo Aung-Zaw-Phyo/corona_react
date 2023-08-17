@@ -11,7 +11,7 @@ import { fail } from "../utils/sweet";
 
 const Backdrop = ({onChange}) => {
     return (
-      <div className="fixed top-0 bottom-0 left-0 right-0 w-full h-screen bg-gray-600/60 z-10"/>
+      <div onClick={onChange} className="fixed top-0 bottom-0 left-0 right-0 w-full h-screen bg-gray-600/60 z-10"/>
     )
 }
 
@@ -35,6 +35,7 @@ const Modal = (props) => {
             name: item.name,
             price: item.price,
             image: item.image,
+            discount: item.discount
         }))
     }
 
@@ -48,7 +49,7 @@ const Modal = (props) => {
 
 
     return (
-        <div className="fixed h-[80%] overflow-y-hidden rounded-lg flex justify-center items-center w-[100%] md:w-[70%] lg:w-[60%] xl:w-[50%] p-3 left-[50%] top-[50%] z-50" style={{ transform: 'translate(-50%, -50%)' }}>
+        <div className="fixed h-[80%] overflow-y-hidden rounded-lg no-scrollbar flex justify-center items-center w-[100%] md:w-[70%] lg:w-[60%] xl:w-[55%] p-3 left-[50%] top-[50%] z-50" style={{ transform: 'translate(-50%, -50%)' }}>
             <div className="bg-white w-full max-h-full overflow-y-scroll no-scrollbar p-3 py-5 rounded-lg">
                 {
                     !isCheckout && (
@@ -58,15 +59,15 @@ const Modal = (props) => {
                                     <div className="mb-3 flex justify-between" key={item.id}>
                                         <div className="flex items-center">
                                             <div className="p-2 bg-[#eee] rounded-lg">
-                                                <img className="" width={50} height={50} src={item.image} alt="" />
+                                                <img className="" width={55} height={55} src={item.image} alt="" />
                                             </div>
-                                            <div className="ms-3">
+                                            <div className=" ms-3">
                                                 <p>{item.name}</p>
-                                                <p>${item.price} <span className="mx-2">x</span> {item.quantity}</p>
+                                                <p>${item.price} {item.discount && item.discount > 0 && <span className="text-[18px]">/ {item.discount}%</span>} <span className="mx-3">x</span> {item.quantity}</p>
                                             </div>
                                         </div>
                                         <div className="text-end">
-                                            <p className=' text-[18px] mb-2'>${item.amount}</p>
+                                            <p className=' text-[18px] mb-1 mr-1'>${item.amount}</p>
                                             <div>
                                                 <button className="w-auto h-auto p-[8px] outline_btn"
                                                     onClick={removeItemToCart.bind(null, item)}

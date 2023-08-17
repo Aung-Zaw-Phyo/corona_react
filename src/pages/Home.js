@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import hero_img from "../images/hero-bg.jpg";
 import burger_img from '../images/burger.png'
 import pizza_img from '../images/pizza.png'
@@ -7,15 +7,24 @@ import { getToken } from "../utils/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartData } from "../store/cart-actions";
 import { cartActions } from "../store/cart-slice";
+import { Await, Link, defer, json, useLoaderData } from "react-router-dom";
+import ComponentLoading from "../components/UI/ComponentLoading";
+import ComponentError from "../components/UI/ComponentError";
+import Discount from "../components/home/Discount";
+import HeroSection from "../components/home/HeroSection";
+import BurgerSection from "../components/home/BurgerSection";
+import PizzaSection from "../components/home/PizzaSection";
+import PastaSection from "../components/home/PastaSection";
 
 let isInitial = true
 const Home = () => {
     const dispatch = useDispatch()
     const isAuth = useSelector(state => state.cart.isAuth)
+    const loadedData = useLoaderData()
+
 
     useEffect(() => {
         if(getToken() && !isInitial && !isAuth) {
-            console.log('hit')
             dispatch(fetchCartData())
             dispatch(cartActions.isAuthChangeHandler())
         }
@@ -27,48 +36,45 @@ const Home = () => {
 
     return (
         <>
-            <div className="w-full h-screen flex items-center bg-[#EDF2F6]">
-                <img className="w-full h-full object-cover" src={hero_img} alt="" />
-            </div>
-            <div className="container py-16 ">
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="p-3 flex flex-col justify-center">
-                        <h1 className="text-[22px] mb-3">Delicious Burger</h1>
-                        <p className="mb-3">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti, aut itaque modi quia velit pariatur cupiditate commodi debitis exercitationem ipsa vitae maiores error eaque eligendi eos inventore libero quibusdam sit!
-                        </p>
-                        <button className="">See More</button>
-                    </div>
-                    <div className="p-3">
-                        <img className="lg:w-[80%] mx-auto" src={burger_img} alt="" />
-                    </div>
-                </div>
-            </div>
-            <div className="bg-[#eeeeee3f]">
-                <div className="container py-16 ">
-                    <h1 className="text-[22px] mb-2 text-center">Best Delicious Pizza</h1>
-                    <div className="h-[2px] w-[100px] bg-[#ffbe33] mx-auto" />
-                    <img className="w-full md:w-[75%] mx-auto" src={pizza_img} alt="" />
-                </div>
-            </div>
-            <div className="container py-16">
-                <div className="grid grid-cols-2">
-                    <div>
-                        <h1 className="text-[22px] mb-3">Best Delicious Pasta</h1>
-                        <p className="mb-3">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti, aut itaque modi quia velit pariatur cupiditate commodi debitis exercitationem ipsa vitae maiores error eaque eligendi eos inventore libero quibusdam sit!
-                        </p>
-                        <p className="mb-3">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti, aut itaque modi quia velit pariatur cupiditate commodi debitis exercitationem ipsa vitae maiores error eaque eligendi eos inventore libero quibusdam sit!
-                        </p>
-                        <button className="">See More</button>
-                    </div>
-                    <video className="w-screen" src={pasta_video} controls autoPlay loop></video>
-                </div>
-            </div>
+            <HeroSection img={hero_img}/>
+            
+            {/* Discount Section */}
+            <Suspense fallback={<ComponentLoading/>}>
+                <Await resolve={loadedData.discount} errorElement={<ComponentError/>}>
+                    {(data) => <Discount data={data} />}
+                </Await>
+            </Suspense>
 
+            <BurgerSection img={burger_img}/>
+
+            <PizzaSection img={pizza_img} />
+
+            <PastaSection video={pasta_video}/>
         </>
     );
 };
 
 export default Home;
+
+const discountLoader = async () => {
+    const response = await fetch('http://localhost:8000/api/discount-product', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+  
+    if(!response.ok) {
+        throw json({message: 'Something wrong.'}, {status: 500})
+    }
+  
+    const resData = await response.json()
+    return resData
+  }
+  
+export const loader = ({request, params}) => {
+    return defer({
+      discount: discountLoader()
+    })
+}
